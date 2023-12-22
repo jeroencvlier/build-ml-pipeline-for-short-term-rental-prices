@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 import wandb
+import logging
 
 
 def pytest_addoption(parser):
@@ -14,13 +15,22 @@ def pytest_addoption(parser):
 @pytest.fixture(scope='session')
 def data(request):
     run = wandb.init(job_type="data_tests", resume=True)
+    logging.basicConfig(
+        filename='./logs/pytest_logs.log',
+
+        level=logging.INFO,
+        filemode='w',
+        format='%(name)s - %(levelname)s - %(message)s')
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
+
     data_path = run.use_artifact(request.config.option.csv).file()
 
     if data_path is None:
         pytest.fail("You must provide the --csv option on the command line")
+
+    logging.info('File path for the data is: %s', request.config.option.csv)
 
     df = pd.read_csv(data_path)
 
@@ -33,11 +43,13 @@ def ref_data(request):
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
+
     data_path = run.use_artifact(request.config.option.ref).file()
 
     if data_path is None:
         pytest.fail("You must provide the --ref option on the command line")
 
+    logging.info('File path for the reference data is: %s', data_path)
     df = pd.read_csv(data_path)
 
     return df
@@ -52,6 +64,7 @@ def kl_threshold(request):
 
     return float(kl_threshold)
 
+
 @pytest.fixture(scope='session')
 def min_price(request):
     min_price = request.config.option.min_price
@@ -60,6 +73,7 @@ def min_price(request):
         pytest.fail("You must provide min_price")
 
     return float(min_price)
+
 
 @pytest.fixture(scope='session')
 def max_price(request):
