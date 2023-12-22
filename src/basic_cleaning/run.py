@@ -32,6 +32,11 @@ def go(args):
     logger.info("Removing outliers...")
     df = df[df['price'].between(args.min_price, args.max_price)]
 
+    logger.info("Converting last_review to datetime format...")
+    idx = df['longitude'].between(-74.25, -
+                                  73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     # save in temp directory
     logger.info(
         "Saving cleaned data to temporary directory and uploading to W&B.")
