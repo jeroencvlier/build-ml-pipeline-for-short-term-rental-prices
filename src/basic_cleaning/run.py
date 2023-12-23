@@ -18,13 +18,7 @@ def go(args):
     run = wandb.init(job_type="basic_cleaning")
     run.config.update(args)
 
-    # Download input artifact. This will also log that this script is using this
-    # particular version of the artifact
-    # artifact_local_path = run.use_artifact(args.input_artifact).file()
-
-    ######################
-    # YOUR CODE HERE     #
-    ######################
+    # download input artifact
     artifact_local_path = run.use_artifact(args.input_artifact).file()
     logger.info("Downloaded artifact to: %s", artifact_local_path)
     df = pd.read_csv(artifact_local_path, index_col=0)

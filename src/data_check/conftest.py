@@ -22,9 +22,7 @@ def data(request):
         filemode='w',
         format='%(name)s - %(levelname)s - %(message)s')
 
-    # Download input artifact. This will also note that this script is using this
-    # particular version of the artifact
-
+    # Download input artifact.
     data_path = run.use_artifact(request.config.option.csv).file()
 
     if data_path is None:
@@ -41,9 +39,7 @@ def data(request):
 def ref_data(request):
     run = wandb.init(job_type="data_tests", resume=True)
 
-    # Download input artifact. This will also note that this script is using this
-    # particular version of the artifact
-
+    # Download input artifact.
     data_path = run.use_artifact(request.config.option.ref).file()
 
     if data_path is None:
