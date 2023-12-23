@@ -2,19 +2,15 @@
 # NYC Short-Term Rental Price Prediction Pipeline
 
 ## Overview
-This ML pipeline predicts short-term rental prices in NYC. It automates the process of data ingestion, cleaning, testing, training, and evaluation, ensuring robust and efficient weekly updates with new data sets.
+This ML pipeline predicts short-term rental prices in NYC. It automates the process of data ingestion, cleaning, 
+testing, training, and evaluation, ensuring robust and efficient weekly updates with new data sets. The pipeline is
+built using [MLflow](https://mlflow.org/) and [Hydra](https://hydra.cc/). It is deployed on [Weights & Biases](https://wandb.ai/).
 
-## Table of Contents
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-- [Pipeline Components](#pipeline-components)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Links
-[W&B Project](https://wandb.ai/jeroencvlier/nyc_airbnb)
-[GitHub Repository](https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices)
+- [W&B Project](https://wandb.ai/jeroencvlier/nyc_airbnb) -> For the latest public results and pipeline visualization.
+- [GitHub Repository](https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices) -> For the source code.
+- [Latest Release](https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices/releases/latest) -> For the latest release.
 
 ## Getting Started
 ### Prerequisites
@@ -29,12 +25,16 @@ This ML pipeline predicts short-term rental prices in NYC. It automates the proc
    ```
 
 2. **Create and Activate the Conda Environment**
+
+Create the environment from the `environment.yml` file:
    ```bash
    conda env create -f environment.yml
    conda activate nyc_airbnb_dev
    ```
 
 3. **Initialize Weights & Biases**
+To use Weights & Biases you need to create an account and login with an API key.
+
    ```bash
    wandb login
    ```
@@ -50,7 +50,19 @@ This ML pipeline predicts short-term rental prices in NYC. It automates the proc
 - **Visualization**: Provides insights into the model's performance and data flow.
 
 ## Usage
-Run the entire pipeline or specific components using MLflow:
+Run the entire pipeline 
+```bash
+mlflow run . 
+```
+
+or specific components using MLflow [
+    "download",
+    "basic_cleaning",
+    "data_check",
+    "data_split",
+    "train_random_forest",
+]:
+
 ```bash
 mlflow run . -P steps=step_name
 ```
@@ -63,6 +75,26 @@ To retrain the model with new data:
 ```bash
 mlflow run https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices.git -v 1.0.1 -P hydra_options="etl.sample='sample2.csv'"
 ```
+
+## Training results
+The best model achieved an R2 score of 0.5663 and a mean absolute error of 33.705. While this is the
+best result, we decided to pick a leaner model which scored an r2 of 0.5659 and a mean absolute error of 33.711
+and the following hyperparameters:
+
+| Parameter | Value |
+| :--- | :--- |
+| n_estimators | 100 |
+| max_depth | 15 |
+| max_features | 0.33 |
+| min_tfidf_features | 30 |
+
+After retraining the model on new data we got an R2 score of 0.5944 and a mean absolute error of 31.9.
+
+![hyperparameters](images/hyperparameter-tunning-results.png "Hyperparameter tuning results")
+
+## Pipeline Visualization
+Visualization of the pipeline using Weights & Biases.
+![pipeline](images/wandb-pipeline.png "Pipeline")
 
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE.txt) for more information.
