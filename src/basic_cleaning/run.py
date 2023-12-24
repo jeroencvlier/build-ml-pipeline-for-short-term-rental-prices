@@ -1,20 +1,21 @@
-#!/usr/bin/env python
 """
-Download from W&B the raw dataset and apply some basic data cleaning, exporting the result to a new artifact
+Download from W&B the raw dataset and apply some basic data cleaning,
+exporting the result to a new artifact
 """
+
 import os
 import argparse
 import logging
+import tempfile
 import wandb
 import pandas as pd
-import tempfile
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
 
 def go(args):
-
+    """Run the data cleaning script."""
     run = wandb.init(job_type="basic_cleaning")
     run.config.update(args)
 
@@ -87,14 +88,14 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--min_price",
-        type=int,
+        type=float,
         help="Minimum $ price to exclude as an outlier",
         required=True
     )
 
     parser.add_argument(
         "--max_price",
-        type=int,
+        type=float,
         help="Maximum $ price to exclude as an outlier",
         required=True
     )

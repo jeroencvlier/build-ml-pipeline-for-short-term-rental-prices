@@ -1,9 +1,9 @@
-import json
+'''Main pipeline script for the mlflow project'''
 
-import mlflow
+import json
 import tempfile
 import os
-import wandb
+import mlflow
 import hydra
 from omegaconf import DictConfig
 
@@ -17,12 +17,13 @@ _steps = [
 # NOTE: We do not include "test_regression_model" in the steps so it is not run by mistake.
 # You first need to promote a model export to "prod" before you can run this,
 
-# This automatically reads in the configuration
-
 
 @hydra.main(config_name='config')
 def go(config: DictConfig):
-
+    '''
+    Main pipeline script for the mlflow project specified in the
+    config file and initiating the steps specified in the config file
+    '''
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
     os.environ["WANDB_RUN_GROUP"] = config["main"]["experiment_name"]
@@ -51,8 +52,10 @@ def go(config: DictConfig):
         if "basic_cleaning" in active_steps:
             # perform basic cleaning
             _ = mlflow.run(
-                os.path.join(hydra.utils.get_original_cwd(),
-                             "src", "basic_cleaning"),
+                os.path.join(
+                    hydra.utils.get_original_cwd(),
+                    "src",
+                    "basic_cleaning"),
                 "main",
                 parameters={
                     "input_artifact": "sample.csv:latest",
@@ -60,8 +63,7 @@ def go(config: DictConfig):
                     "output_type": "clean_sample",
                     "output_description": "Data with outliers and null values removed",
                     "min_price": config['etl']['min_price'],
-                    "max_price": config['etl']['max_price']
-                },
+                    "max_price": config['etl']['max_price']},
             )
 
         if "data_check" in active_steps:
@@ -88,20 +90,22 @@ def go(config: DictConfig):
                     "input": "clean_sample.csv:latest",
                     "test_size": config["modeling"]["test_size"],
                     "random_seed": config["modeling"]["random_seed"],
-                    "stratify_by": config["modeling"]["stratify_by"]
-                })
+                    "stratify_by": config["modeling"]["stratify_by"]})
 
         if "train_random_forest" in active_steps:
-            # NOTE: we need to serialize the random forest configuration into JSON to use for W&B
+            # NOTE: we need to serialize the random forest configuration into
+            # JSON to use for W&B
             rf_config = os.path.abspath("rf_config.json")
-            with open(rf_config, "w+") as fp:
+            with open(rf_config, "w+", encoding="utf-8") as fp:
                 json.dump(
                     dict(config["modeling"]["random_forest"].items()), fp)
 
             # train random forest
             _ = mlflow.run(
-                os.path.join(hydra.utils.get_original_cwd(),
-                             "src", "train_random_forest"),
+                os.path.join(
+                    hydra.utils.get_original_cwd(),
+                    "src",
+                    "train_random_forest"),
                 "main",
                 parameters={
                     "trainval_artifact": "trainval_data.csv:latest",
@@ -110,20 +114,18 @@ def go(config: DictConfig):
                     "stratify_by": config["modeling"]["stratify_by"],
                     "rf_config": rf_config,
                     "max_tfidf_features": config["modeling"]["max_tfidf_features"],
-                    "output_artifact": "random_forest_export"
-                },
+                    "output_artifact": "random_forest_export"},
             )
 
         if "test_regression_model" in active_steps:
-            # test regression model, this step needs to be called mannually as it requires a model to be promoted to "prod"
+            # test regression model, this step needs to be called mannually as
+            # it requires a model to be promoted to "prod"
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/test_regression_model",
                 "main",
                 parameters={
                     "test_dataset": "test_data.csv:latest",
-                    "mlflow_model": "random_forest_export:prod"
-                }
-            )
+                    "mlflow_model": "random_forest_export:prod"})
 
 
 if __name__ == "__main__":

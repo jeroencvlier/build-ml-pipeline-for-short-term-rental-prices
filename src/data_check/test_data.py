@@ -1,3 +1,5 @@
+'''This module contains the tests for the data_check module'''
+
 import pandas as pd
 import numpy as np
 import scipy.stats
@@ -30,11 +32,13 @@ def test_column_names(data):
     these_columns = data.columns.values
 
     assert set(expected_colums) == set(
-        these_columns), f"The difference between the columns are: {set(expected_colums).difference(set(these_columns))}"
+        these_columns), f'''The difference between the columns are:
+        {set(expected_colums).difference(set(these_columns))}'''
 
     # This also enforces the same order
     assert list(expected_colums) == list(
-        these_columns), f"Columns are not ordered as expected, {these_columns} in the data but {expected_colums} from the reference dataset!"
+        these_columns), f'''Columns are not ordered as expected,
+        {these_columns} in the data but {expected_colums} from the reference dataset!'''
 
 
 def test_neighborhood_names(data):
@@ -54,13 +58,16 @@ def test_proper_boundaries(data: pd.DataFrame):
     """
     Test proper longitude and latitude boundaries for properties in and around NYC
     """
-    idx = data['longitude'].between(-74.25, -
+    idx = data['longitude'].between(-74.25, - \
                                     73.50) & data['latitude'].between(40.5, 41.2)
 
     assert np.sum(~idx) == 0
 
 
-def test_similar_neigh_distrib(data: pd.DataFrame, ref_data: pd.DataFrame, kl_threshold: float):
+def test_similar_neigh_distrib(
+        data: pd.DataFrame,
+        ref_data: pd.DataFrame,
+        kl_threshold: float):
     """
     Apply a threshold on the KL divergence to detect if the distribution of the new data is
     significantly different than that of the reference dataset

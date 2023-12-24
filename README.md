@@ -1,4 +1,3 @@
-
 # NYC Short-Term Rental Price Prediction Pipeline
 
 ## Overview

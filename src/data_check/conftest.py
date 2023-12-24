@@ -1,10 +1,13 @@
+'''Generates fixtures for the data tests'''
+
+import logging
 import pytest
 import pandas as pd
 import wandb
-import logging
 
 
 def pytest_addoption(parser):
+    '''Adds the options for the tests'''
     parser.addoption("--csv", action="store")
     parser.addoption("--ref", action="store")
     parser.addoption("--kl_threshold", action="store")
@@ -14,6 +17,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session')
 def data(request):
+    '''Returns the data as a pandas DataFrame'''
     run = wandb.init(job_type="data_tests", resume=True)
     logging.basicConfig(
         filename='./logs/pytest_logs.log',
@@ -37,6 +41,7 @@ def data(request):
 
 @pytest.fixture(scope='session')
 def ref_data(request):
+    '''Returns the reference data as a pandas DataFrame'''
     run = wandb.init(job_type="data_tests", resume=True)
 
     # Download input artifact.
@@ -53,6 +58,7 @@ def ref_data(request):
 
 @pytest.fixture(scope='session')
 def kl_threshold(request):
+    '''Returns the threshold for the KL test'''
     kl_threshold = request.config.option.kl_threshold
 
     if kl_threshold is None:
@@ -63,6 +69,7 @@ def kl_threshold(request):
 
 @pytest.fixture(scope='session')
 def min_price(request):
+    '''Returns the minimum price for the data'''
     min_price = request.config.option.min_price
 
     if min_price is None:
@@ -73,6 +80,7 @@ def min_price(request):
 
 @pytest.fixture(scope='session')
 def max_price(request):
+    '''Returns the maximum price for the data'''
     max_price = request.config.option.max_price
 
     if max_price is None:
