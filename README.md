@@ -84,7 +84,7 @@ and the following hyperparameters:
 | n_estimators | 200 |
 | max_depth | 100 |
 | max_features | 0.5 |
-| min_tfidf_features | 30 |
+| max_tfidf_features | 30 |
 
 After retraining the model on new data we got an R2 score of 0.5944 and a mean absolute error of 31.9.
 
