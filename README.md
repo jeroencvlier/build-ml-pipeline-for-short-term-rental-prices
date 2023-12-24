@@ -72,19 +72,19 @@ mlflow run . -P hydra_options="your_configuration"
 
 To retrain the model with new data:
 ```bash
-mlflow run https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices.git -v 1.0.1 -P hydra_options="etl.sample='sample2.csv'"
+mlflow run https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices.git -v 1.0.2 -P hydra_options="etl.sample='sample2.csv'"
 ```
 
 ## Training results
-The best model achieved an R2 score of 0.5663 and a mean absolute error of 33.705. While this is the
-best result, we decided to pick a leaner model which scored an r2 of 0.5659 and a mean absolute error of 33.711
+The best model achieved an R2 score of 0.566 and a mean absolute error of 33.734. While this is the
+best result, we decided to pick a leaner model (v104) which scored an r2 of 0.5634 and a mean absolute error of 33.802
 and the following hyperparameters:
 
 | Parameter | Value |
 | :--- | :--- |
-| n_estimators | 100 |
-| max_depth | 15 |
-| max_features | 0.33 |
+| n_estimators | 200 |
+| max_depth | 100 |
+| max_features | 0.5 |
 | min_tfidf_features | 30 |
 
 After retraining the model on new data we got an R2 score of 0.5944 and a mean absolute error of 31.9.
