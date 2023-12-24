@@ -71,7 +71,7 @@ mlflow run . -P hydra_options="your_configuration"
 
 To retrain the model with new data:
 ```bash
-mlflow run https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices.git -v 1.0.3 -P hydra_options="etl.sample='sample2.csv'"
+mlflow run https://github.com/jeroencvlier/build-ml-pipeline-for-short-term-rental-prices.git -v 1.0.4 -P hydra_options="etl.sample='sample2.csv'"
 ```
 
 ## Training results
