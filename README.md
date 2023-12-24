@@ -25,7 +25,6 @@ built using [MLflow](https://mlflow.org/) and [Hydra](https://hydra.cc/). It is 
 
 2. **Create and Activate the Conda Environment**
 
-Create the environment from the `environment.yml` file:
    ```bash
    conda env create -f environment.yml
    conda activate nyc_airbnb_dev
