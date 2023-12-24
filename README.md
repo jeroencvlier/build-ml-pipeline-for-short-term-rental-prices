@@ -86,7 +86,7 @@ and the following hyperparameters:
 | max_features | 0.5 |
 | max_tfidf_features | 30 |
 
-After retraining the model on new data we got an R2 score of 0.5944 and a mean absolute error of 31.9.
+After retraining the model on new data we got an R2 score of 0.5978 and a mean absolute error of 31.616.
 
 ![hyperparameters](images/hyperparameter-tunning-results.png "Hyperparameter tuning results")
 
